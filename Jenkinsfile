@@ -1,12 +1,21 @@
 pipeline {
   agent any
 
+  environment {
+    JAVA_HOME = "/usr/lib/jvm/java-21-openjdk-amd64"
+    PATH = "${JAVA_HOME}/bin:${env.PATH}"
+  }
+
   stages {
 
     stage('Backend - Build') {
       steps {
         dir('demo') {
-          sh 'mvn clean package -DskipTests=true'
+          sh '''
+            java -version
+            mvn -v
+            mvn clean package -DskipTests=true
+          '''
         }
       }
     }
