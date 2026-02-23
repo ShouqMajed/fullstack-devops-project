@@ -12,9 +12,16 @@ pipeline {
       steps {
         dir('demo') {
           sh '''
+            echo "JAVA_HOME=$JAVA_HOME"
+            which java
             java -version
+            which javac
+            javac -version
             mvn -v
-            mvn clean package -DskipTests=true
+
+            mvn -U clean package -DskipTests=true \
+              -Dmaven.compiler.fork=true \
+              -Dmaven.compiler.executable=$JAVA_HOME/bin/javac
           '''
         }
       }
@@ -23,7 +30,11 @@ pipeline {
     stage('Backend - Test') {
       steps {
         dir('demo') {
-          sh 'mvn test'
+          sh '''
+            mvn test \
+              -Dmaven.compiler.fork=true \
+              -Dmaven.compiler.executable=$JAVA_HOME/bin/javac
+          '''
         }
       }
     }
