@@ -1,28 +1,12 @@
 pipeline {
   agent any
 
-  environment {
-    JAVA_HOME = "/usr/lib/jvm/java-21-openjdk-amd64"
-    PATH = "${JAVA_HOME}/bin:${env.PATH}"
-  }
-
   stages {
 
     stage('Backend - Build') {
       steps {
         dir('demo') {
-          sh '''
-            echo "JAVA_HOME=$JAVA_HOME"
-            which java
-            java -version
-            which javac
-            javac -version
-            mvn -v
-
-            mvn -U clean package -DskipTests=true \
-              -Dmaven.compiler.fork=true \
-              -Dmaven.compiler.executable=$JAVA_HOME/bin/javac
-          '''
+          sh 'mvn clean package -DskipTests=true'
         }
       }
     }
@@ -30,11 +14,7 @@ pipeline {
     stage('Backend - Test') {
       steps {
         dir('demo') {
-          sh '''
-            mvn test \
-              -Dmaven.compiler.fork=true \
-              -Dmaven.compiler.executable=$JAVA_HOME/bin/javac
-          '''
+          sh 'mvn test'
         }
       }
     }
