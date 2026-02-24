@@ -5,6 +5,7 @@ import com.example.demo.repo.CustomerRepository;
 import com.example.demo.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Profile;
 
 import java.util.List;
 @Profile("!test-no-db")
