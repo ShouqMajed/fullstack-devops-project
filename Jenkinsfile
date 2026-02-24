@@ -14,7 +14,7 @@ pipeline {
     stage('Backend - Test') {
       steps {
         dir('demo') {
-          sh 'mvn test'
+          sh 'mvn -Dspring.profiles.active=test-no-db test'
         }
       }
     }
