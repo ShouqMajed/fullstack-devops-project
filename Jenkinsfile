@@ -68,6 +68,29 @@ pipeline {
          }
       }
 
+      stage('Upload-Frontend-to-Nexus') {
+        steps {
+           dir('frontend') {
+              sh "tar -czf frontend-0.0.1-${BUILD_NUMBER}.tgz dist"
+               nexusArtifactUploader artifacts: [
+                [
+                  artifactId: 'frontend',
+                  classifier: '',
+                  file: "frontend-0.0.1-${BUILD_NUMBER}.tgz",
+                  type: 'tgz'
+                ]
+               ],
+                  credentialsId: 'nexus',
+                 groupId: 'com.example',
+                 nexusUrl: '35.181.173.92:8081',
+                 nexusVersion: 'nexus3',
+                 protocol: 'http',
+                 repository: 'fullstack-frontend',
+                 version: "0.0.1-${BUILD_NUMBER}"
+               }
+             }
+          }
+
      stage('Docker Build & Push (Ansible)') {
        steps {
           withCredentials([usernamePassword(
