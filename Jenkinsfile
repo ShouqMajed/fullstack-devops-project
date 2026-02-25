@@ -70,5 +70,13 @@ pipeline {
   }
 }
 
+    stage('Docker Build Frontend') {
+  steps {
+    dir('frontend') {
+      sh 'docker build -t shouqmajed/app-frontend:latest .'
+    }
+  }
+}
+
   }
 }
