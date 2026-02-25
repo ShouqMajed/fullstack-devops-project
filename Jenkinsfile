@@ -46,6 +46,28 @@ pipeline {
       }
     }
 
+    stage('Upload-to-Nexus') {
+      steps {
+        dir('demo') {
+            nexusArtifactUploader artifacts: [
+               [
+                 artifactId: 'demo',
+                 classifier: '',
+                 file: 'target/demo-0.0.1-SNAPSHOT.jar',
+                 type: 'jar'
+               ]
+            ],
+                credentialsId: 'nexus',
+                groupId: 'com.example',
+               nexusUrl: '35.181.173.92:8081',
+               nexusVersion: 'nexus3',
+               protocol: 'http',
+               repository: 'fullstack-backend',
+               version: "0.0.1-${BUILD_NUMBER}"
+           }
+         }
+      }
+
      stage('Docker Build & Push (Ansible)') {
        steps {
           withCredentials([usernamePassword(
