@@ -54,7 +54,7 @@ pipeline {
            passwordVariable: 'DOCKERHUB_PASS'
          )]) {
             sh '''
-                ansible-playbook ansible/playbook-docker.yml -e "workspace=$WORKSPACE"
+                ansible-playbook ansible/playbook-docker.yml -e "workspace=$WORKSPACE tag=$BUILD_NUMBER"
               '''
              }
            }
