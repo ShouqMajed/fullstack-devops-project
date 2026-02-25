@@ -1,0 +1,29 @@
+- name: Build and Push Docker Images (Backend & Frontend)
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    workspace: "{{ workspace | default(lookup('env','WORKSPACE')) }}"
+
+  tasks:
+
+    - name: Docker Login
+      shell: |
+        echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
+      no_log: true
+
+    - name: Build Backend Image
+      shell: |
+        docker build -t shouqmajed/app-backend:latest {{ workspace }}/demo
+
+    - name: Push Backend Image
+      shell: |
+        docker push shouqmajed/app-backend:latest
+
+    - name: Build Frontend Image
+      shell: |
+        docker build -t shouqmajed/app-frontend:latest {{ workspace }}/frontend
+
+    - name: Push Frontend Image
+      shell: |
+        docker push shouqmajed/app-frontend:latest
