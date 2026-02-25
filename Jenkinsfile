@@ -55,5 +55,20 @@ pipeline {
     }
 }
 
+    stage('Docker Push Backend') {
+  steps {
+    withCredentials([usernamePassword(
+      credentialsId: 'DockerHub',
+      usernameVariable: 'DOCKERHUB_USER',
+      passwordVariable: 'DOCKERHUB_PASS'
+    )]) {
+      sh '''
+        echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
+        docker push shouqmajed/app-backend:latest
+      '''
+    }
+  }
+}
+
   }
 }
