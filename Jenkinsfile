@@ -46,52 +46,19 @@ pipeline {
       }
     }
 
-    stage('Docker Build Backend') {
-    steps {
-        sh '''
-        cd demo
-        docker build -t shouqmajed/app-backend:latest .
-        '''
-    }
-}
-
-    stage('Docker Push Backend') {
-  steps {
-    withCredentials([usernamePassword(
-      credentialsId: 'DockerHub',
-      usernameVariable: 'DOCKERHUB_USER',
-      passwordVariable: 'DOCKERHUB_PASS'
-    )]) {
-      sh '''
-        echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
-        docker push shouqmajed/app-backend:latest
-      '''
-    }
-  }
-}
-
-    stage('Docker Build Frontend') {
-  steps {
-    dir('frontend') {
-      sh 'docker build -t shouqmajed/app-frontend:latest .'
-    }
-  }
-}
-
-    stage('Docker Push Frontend') {
-  steps {
-    withCredentials([usernamePassword(
-      credentialsId: 'DockerHub',
-      usernameVariable: 'DOCKERHUB_USER',
-      passwordVariable: 'DOCKERHUB_PASS'
-    )]) {
-      sh '''
-        echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
-        docker push shouqmajed/app-frontend:latest
-      '''
-    }
-  }
-}
+     stage('Docker Build & Push (Ansible)') {
+       steps {
+          withCredentials([usernamePassword(
+          credentialsId: 'DockerHub',
+           usernameVariable: 'DOCKERHUB_USER',
+           passwordVariable: 'DOCKERHUB_PASS'
+         )]) {
+            sh '''
+                ansible-playbook ansible/playbook-docker.yml -e "workspace=$WORKSPACE"
+              '''
+             }
+           }
+        }
 
   }
 }
