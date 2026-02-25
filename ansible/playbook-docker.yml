@@ -4,26 +4,34 @@
 
   vars:
     workspace: "{{ workspace | default(lookup('env','WORKSPACE')) }}"
+    tag: "{{ tag | default(lookup('env','BUILD_NUMBER')) }}"
 
   tasks:
-
     - name: Docker Login
       shell: |
         echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
       no_log: true
 
-    - name: Build Backend Image
+    - name: Build Backend Image (tag + latest)
       shell: |
-        docker build -t shouqmajed/app-backend:latest {{ workspace }}/demo
+        docker build \
+          -t shouqmajed/app-backend:{{ tag }} \
+          -t shouqmajed/app-backend:latest \
+          {{ workspace }}/demo
 
-    - name: Push Backend Image
+    - name: Push Backend Image (tag + latest)
       shell: |
+        docker push shouqmajed/app-backend:{{ tag }}
         docker push shouqmajed/app-backend:latest
 
-    - name: Build Frontend Image
+    - name: Build Frontend Image (tag + latest)
       shell: |
-        docker build -t shouqmajed/app-frontend:latest {{ workspace }}/frontend
+        docker build \
+          -t shouqmajed/app-frontend:{{ tag }} \
+          -t shouqmajed/app-frontend:latest \
+          {{ workspace }}/frontend
 
-    - name: Push Frontend Image
+    - name: Push Frontend Image (tag + latest)
       shell: |
+        docker push shouqmajed/app-frontend:{{ tag }}
         docker push shouqmajed/app-frontend:latest
