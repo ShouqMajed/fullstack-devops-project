@@ -46,5 +46,14 @@ pipeline {
       }
     }
 
+    stage('Docker Build Backend') {
+    steps {
+        sh '''
+        cd demo
+        docker build -t shouqmajed/app-backend:latest .
+        '''
+    }
+}
+
   }
 }
