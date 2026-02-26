@@ -91,6 +91,27 @@ pipeline {
              }
           }
 
+    stage('Sonarqube-Backend') {
+    steps {
+        dir('demo') {
+            withCredentials([string(credentialsId: 'sonar-backend-token', variable: 'SONAR_TOKEN')]) {
+                withSonarQubeEnv('sonarqube') {
+                    sh """
+                        mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                        -Dsonar.projectKey=fullstack-backend \
+                        -Dsonar.login=$SONAR_TOKEN
+                    """
+                }
+            }
+        }
+        timeout(time: 5, unit: 'MINUTES') {
+            script {
+                waitForQualityGate abortPipeline: true
+            }
+        }
+    }
+}
+
      stage('Docker Build & Push (Ansible)') {
        steps {
           withCredentials([usernamePassword(
