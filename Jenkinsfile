@@ -112,16 +112,18 @@ stage('Sonarqube') {
 
 }
 
-    stage('Sonarqube-Frontend') {
+stage('Sonarqube-Frontend') {
     steps {
         dir('frontend') {
             withSonarQubeEnv('sonarqube') {
-                sh """
-                    sonar-scanner \
-                    -Dsonar.projectKey=fullstack-frontend \
-                    -Dsonar.sources=src \
-                    -Dsonar.host.url=http://15.237.254.168:9000
-                """
+                script {
+                    def scannerHome = tool 'sonar-scanner'
+                    sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=fullstack-frontend \
+                        -Dsonar.sources=src
+                    """
+                }
             }
         }
 
@@ -132,7 +134,6 @@ stage('Sonarqube') {
         }
     }
 }
-
      stage('Docker Build & Push (Ansible)') {
        steps {
           withCredentials([usernamePassword(
