@@ -112,6 +112,27 @@ stage('Sonarqube') {
 
 }
 
+    stage('Sonarqube-Frontend') {
+    steps {
+        dir('frontend') {
+            withSonarQubeEnv('sonarqube') {
+                sh """
+                    sonar-scanner \
+                    -Dsonar.projectKey=fullstack-frontend \
+                    -Dsonar.sources=src \
+                    -Dsonar.host.url=http://15.237.254.168:9000
+                """
+            }
+        }
+
+        timeout(time: 5, unit: 'MINUTES') {
+            script {
+                waitForQualityGate abortPipeline: true
+            }
+        }
+    }
+}
+
      stage('Docker Build & Push (Ansible)') {
        steps {
           withCredentials([usernamePassword(
