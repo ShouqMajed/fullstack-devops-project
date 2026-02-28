@@ -1,1 +1,34 @@
-
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-frontend
+  namespace: fullstack-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-frontend
+  template:
+    metadata:
+      labels:
+        app: app-frontend
+    spec:
+      containers:
+        - name: app-frontend
+          image: shouqmajed/app-frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: fullstack-app
+spec:
+  selector:
+    app: app-frontend
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
