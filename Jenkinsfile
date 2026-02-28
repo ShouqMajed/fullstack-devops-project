@@ -148,5 +148,13 @@ stage('Sonarqube-Frontend') {
            }
         }
 
+    stage('Deploy to Kubernetes (Ansible)') {
+  steps {
+    dir('ansible') {
+      sh 'ansible-playbook -i inventory.ini playbook-k8s.yaml'
+    }
+  }
+}
+
   }
 }
