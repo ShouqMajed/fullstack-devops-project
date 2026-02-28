@@ -1,0 +1,111 @@
+---
+- name: Deploy FullStack Project on Kubernetes (Check -> Delete -> Apply)
+  hosts: k8s_master
+  become: true
+
+  vars:
+    kubeconfig_path: "/home/ubuntu/.kube/config"
+    repo_root: "{{ playbook_dir | dirname }}"
+    k8s_dir: "/home/ubuntu/fullstack-devops-project/k8s"
+    ns: "fullstack-app"
+
+  tasks:
+    - name: Copy k8s folder to master
+      copy:
+        src: "{{ repo_root }}/k8s/"
+        dest: "{{ k8s_dir }}/"
+        owner: ubuntu
+        group: ubuntu
+        mode: "0644"
+
+    # 1) Namespace
+    - name: Apply Namespace
+      command: kubectl apply -f {{ k8s_dir }}/namespace.yaml
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+
+    # 2) PV/PVC (Apply only)
+    - name: Apply PV then PVC
+      command: kubectl apply -f {{ k8s_dir }}/{{ item }}
+      loop:
+        - mysql-pv.yaml
+        - mysql-pvc.yaml
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+
+    # 3) MySQL (Apply only)
+    - name: Apply MySQL (Deployment + Service)
+      command: kubectl apply -f {{ k8s_dir }}/mysql-deployment.yaml -n {{ ns }}
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+
+    # 4) Backend (Check -> Delete -> Apply)
+    - name: Check backend deployment exists
+      command: kubectl get deployment app-backend -n {{ ns }}
+      register: be_dep
+      failed_when: false
+      changed_when: false
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+
+    - name: Delete backend resources (only if exists)
+      command: kubectl delete -f {{ k8s_dir }}/backend.yaml -n {{ ns }}
+      when: be_dep.rc == 0
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+
+    - name: Apply backend resources
+      command: kubectl apply -f {{ k8s_dir }}/backend.yaml -n {{ ns }}
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+
+    # 5) Frontend (Check -> Delete -> Apply)
+    - name: Check frontend deployment exists
+      command: kubectl get deployment app-frontend -n {{ ns }}
+      register: fe_dep
+      failed_when: false
+      changed_when: false
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+
+    - name: Delete frontend resources (only if exists)
+      command: kubectl delete -f {{ k8s_dir }}/frontend.yaml -n {{ ns }}
+      when: fe_dep.rc == 0
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+
+    - name: Apply frontend resources
+      command: kubectl apply -f {{ k8s_dir }}/frontend.yaml -n {{ ns }}
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+
+    # 6) Ingress (Check -> Delete -> Apply)
+    - name: Check ingress exists
+      command: kubectl get ingress fullstack-ingress -n {{ ns }}
+      register: ing
+      failed_when: false
+      changed_when: false
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+
+    - name: Delete ingress (only if exists)
+      command: kubectl delete -f {{ k8s_dir }}/ingress.yaml -n {{ ns }}
+      when: ing.rc == 0
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+
+    - name: Apply ingress
+      command: kubectl apply -f {{ k8s_dir }}/ingress.yaml -n {{ ns }}
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+
+    # 7) Verify
+    - name: Show status
+      command: kubectl get pods,svc,ingress -n {{ ns }}
+      register: out
+      changed_when: false
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+
+    - debug:
+        var: out.stdout_lines
