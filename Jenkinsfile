@@ -46,7 +46,7 @@ pipeline {
       }
     }
 
-    stage('Upload-to-Nexus') {
+    stage('Backend-to-Nexus') {
       steps {
         dir('demo') {
             nexusArtifactUploader artifacts: [
@@ -68,7 +68,7 @@ pipeline {
          }
       }
 
-      stage('Upload-Frontend-to-Nexus') {
+      stage('Frontend-to-Nexus') {
         steps {
            dir('frontend') {
               sh "tar -czf frontend-0.0.1-${BUILD_NUMBER}.tgz dist"
@@ -91,7 +91,7 @@ pipeline {
              }
           }
 
-stage('Sonarqube') {
+stage('Backend - Sonarqube') {
     steps {
         dir('demo') {
             withSonarQubeEnv('sonarqube') {
@@ -112,7 +112,7 @@ stage('Sonarqube') {
 
 }
 
-stage('Sonarqube-Frontend') {
+stage('Frontend - Sonarqube') {
     steps {
         dir('frontend') {
             withSonarQubeEnv('sonarqube') {
