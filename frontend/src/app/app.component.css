@@ -1,105 +1,195 @@
-body {
-  margin: 0;
+:host {
+  display: block;
+  min-height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background: radial-gradient(1200px 600px at 20% 10%, rgba(120,200,255,.25), transparent 60%),
+              radial-gradient(900px 500px at 80% 30%, rgba(120,120,255,.18), transparent 55%),
+              linear-gradient(135deg, #071a2b, #0a2b3c, #0b3a4b);
+  color: #eaf3ff;
+}
+
+.page {
+  min-height: 100vh;
+}
+
+.hero {
+  padding: 54px 16px 28px;
+}
+
+.hero-inner {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.badge {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.15);
+  font-weight: 700;
+}
+
+.hero-title {
+  margin: 16px 0 10px;
+  font-size: 44px;
+}
+
+.hero-subtitle {
+  opacity: .9;
+}
+
+.meta {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.meta-item {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.14);
+  backdrop-filter: blur(8px);
 }
 
 .container {
-  max-width: 900px;
-  margin: 60px auto;
-  padding: 20px;
-}
-
-.title {
-  text-align: center;
-  color: white;
-  margin-bottom: 30px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 16px;
+  display: grid;
+  gap: 16px;
 }
 
 .card {
-  background: white;
+  border-radius: 18px;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.16);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 14px 40px rgba(0,0,0,.35);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 18px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+
+.card-title {
+  margin: 0;
+  font-weight: 900;
+}
+
+.card-desc {
+  margin-top: 6px;
+  font-size: 13px;
+  opacity: .85;
+}
+
+.form-grid {
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.field input {
+  width: 100%;
+  padding: 12px;
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 25px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.18);
+  color: white;
 }
 
-.form-group {
+.actions {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  outline: none;
-}
-
-input:focus {
-  border-color: #2c5364;
+  align-items: flex-end;
 }
 
 .btn {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-weight: 800;
   cursor: pointer;
-  transition: 0.3s ease;
 }
 
 .primary {
-  background: #2c5364;
-  color: white;
-}
-
-.primary:hover {
-  background: #203a43;
+  background: linear-gradient(135deg, #2d77ff, #23b7ff);
+  color: #061627;
 }
 
 .danger {
-  background: #e74c3c;
+  background: rgba(231,76,60,.95);
   color: white;
 }
 
-.danger:hover {
-  background: #c0392b;
+.list {
+  list-style: none;
+  padding: 16px;
+  margin: 0;
+  display: grid;
+  gap: 10px;
 }
 
-.list-card h2 {
-  margin-top: 0;
-}
-
-.customer-item {
+.row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px;
-  border-bottom: 1px solid #eee;
+  border-radius: 14px;
+  background: rgba(0,0,0,.16);
+  border: 1px solid rgba(255,255,255,.10);
 }
 
-.customer-item:last-child {
-  border-bottom: none;
-}
-
-.info {
+.who {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
-.name {
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: rgba(120,200,255,.18);
   font-weight: bold;
 }
 
-.email {
-  font-size: 14px;
-  color: gray;
+.who-name {
+  font-weight: 900;
+}
+
+.who-email {
+  font-size: 13px;
+  opacity: .8;
 }
 
 .empty {
+  padding: 18px;
   text-align: center;
-  color: gray;
-  padding: 20px;
+  opacity: .85;
 }
+
+.note {
+  margin: 0 18px 18px;
+  font-size: 13px;
+  opacity: .85;
+}
+
+.role-note {
+  margin: 0 18px 18px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
