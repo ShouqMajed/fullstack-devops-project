@@ -14,50 +14,113 @@
   <span>frontend app is running!</span>
 </div>
 -->
-<div class="container">
+<div class="page">
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="badge">DevOps Academy</div>
+      <h1 class="hero-title">DevOps Foundations</h1>
+      <p class="hero-subtitle">
+        Practical CI/CD, Docker, Kubernetes, and Cloud basics — built for hands-on learning.
+      </p>
 
-  <h1 class="title">Customer Management</h1>
-
-  <div class="card form-card">
-    <div class="form-group">
-      <input type="text"
-             [(ngModel)]="newCustomer.name"
-             placeholder="Enter Name" />
-
-      <input type="email"
-             [(ngModel)]="newCustomer.email"
-             placeholder="Enter Email" />
-
-      <button class="btn primary"
-              (click)="addCustomer()">
-        Add Customer
-      </button>
+      <div class="meta">
+        <div class="meta-item">
+          <span class="meta-label">Duration</span>
+          <span class="meta-value">4 Weeks</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Level</span>
+          <span class="meta-value">Beginner → Intermediate</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Format</span>
+          <span class="meta-value">Projects + Labs</span>
+        </div>
+      </div>
     </div>
-  </div>
+  </header>
 
-  <div class="card list-card">
-    <h2>Customer List</h2>
+  <main class="container">
 
-    <div *ngIf="customers.length === 0" class="empty">
-      No customers yet.
-    </div>
+    <section class="card">
+      <div class="card-header">
+        <h2 class="card-title">Course Registration</h2>
+        <p class="card-desc">
+          Fill your details to register. Your name will appear in the registrants list.
+        </p>
+      </div>
 
-    <ul>
-      <li *ngFor="let customer of customers" class="customer-item">
-        <div class="info">
-          <span class="name">{{ customer.name }}</span>
-          <span class="email">{{ customer.email }}</span>
+      <div class="form-grid">
+        <div class="field">
+          <label>Full Name</label>
+          <input type="text"
+                 [(ngModel)]="newCustomer.name"
+                 placeholder="e.g. Shoug Majed" />
         </div>
 
-        <button class="btn danger"
-                (click)="deleteCustomer(customer.id)">
-          Delete
-        </button>
-      </li>
-    </ul>
-  </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email"
+                 [(ngModel)]="newCustomer.email"
+                 placeholder="e.g. shoug@email.com" />
+        </div>
 
+        <div class="actions">
+
+          <button class="btn primary"
+                  (click)="addCustomer()">
+            Register
+          </button>
+        </div>
+      </div>
+
+      <div class="note">
+        <span class="dot"></span>
+        This is a demo registration system (CRUD functionality).
+      </div>
+    </section>
+
+ 
+    <section class="card">
+      <div class="card-header">
+        <h2 class="card-title">Registrants</h2>
+        <p class="card-desc">List of registered learners.</p>
+      </div>
+
+      <div *ngIf="customers.length === 0" class="empty">
+        No one registered yet.
+      </div>
+
+      <ul class="list">
+        <li *ngFor="let customer of customers" class="row">
+          <div class="who">
+            <div class="avatar">
+              {{ (customer.name || '?')[0] }}
+            </div>
+
+            <div class="who-text">
+              <div class="who-name">{{ customer.name }}</div>
+              <div class="who-email">{{ customer.email }}</div>
+            </div>
+          </div>
+
+  
+          <button class="btn danger"
+                  (click)="deleteCustomer(customer.id)">
+            Cancel Registration
+          </button>
+        </li>
+      </ul>
+
+  
+      <p class="role-note">
+        * In a real production system, only administrators can remove registrants.
+        Authentication & role-based access control would be required.
+      </p>
+    </section>
+  </main>
 </div>
+
 
 <div class="content" style="display:none">
   <span>frontend app is running!</span>
