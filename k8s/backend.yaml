@@ -20,7 +20,7 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            # بدل localhost في application.properties
+            
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://mysql-service:3306/mydb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
             - name: SPRING_DATASOURCE_USERNAME
