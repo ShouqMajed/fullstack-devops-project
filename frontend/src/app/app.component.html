@@ -1,3 +1,4 @@
+<!--
 <h2>Customer List</h2>
 <input [(ngModel)]="newCustomer.name" placeholder="Name">
 <input [(ngModel)]="newCustomer.email" placeholder="Email">
@@ -9,6 +10,55 @@
     <button (click)="deleteCustomer(customer.id)">Delete</button>
   </li>
 </ul>
+<div class="content" style="display:none">
+  <span>frontend app is running!</span>
+</div>
+-->
+<div class="container">
+
+  <h1 class="title">Customer Management</h1>
+
+  <div class="card form-card">
+    <div class="form-group">
+      <input type="text"
+             [(ngModel)]="newCustomer.name"
+             placeholder="Enter Name" />
+
+      <input type="email"
+             [(ngModel)]="newCustomer.email"
+             placeholder="Enter Email" />
+
+      <button class="btn primary"
+              (click)="addCustomer()">
+        Add Customer
+      </button>
+    </div>
+  </div>
+
+  <div class="card list-card">
+    <h2>Customer List</h2>
+
+    <div *ngIf="customers.length === 0" class="empty">
+      No customers yet.
+    </div>
+
+    <ul>
+      <li *ngFor="let customer of customers" class="customer-item">
+        <div class="info">
+          <span class="name">{{ customer.name }}</span>
+          <span class="email">{{ customer.email }}</span>
+        </div>
+
+        <button class="btn danger"
+                (click)="deleteCustomer(customer.id)">
+          Delete
+        </button>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
 <div class="content" style="display:none">
   <span>frontend app is running!</span>
 </div>
