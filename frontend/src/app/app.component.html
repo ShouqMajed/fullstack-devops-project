@@ -48,8 +48,6 @@
   </header>
 
   <main class="container">
-
-    <!-- Registration Section -->
     <section class="card">
       <div class="card-header">
         <h2 class="card-title">Course Registration</h2>
@@ -61,21 +59,24 @@
       <div class="form-grid">
         <div class="field">
           <label>Full Name</label>
-          <input type="text"
-                 [(ngModel)]="newCustomer.name"
-                 placeholder="Enter your full name" />
+          <input
+            type="text"
+            [(ngModel)]="newCustomer.name"
+            placeholder="Enter your full name"
+          />
         </div>
 
         <div class="field">
           <label>Email</label>
-          <input type="email"
-                 [(ngModel)]="newCustomer.email"
-                 placeholder="Enter your email" />
+          <input
+            type="email"
+            [(ngModel)]="newCustomer.email"
+            placeholder="Enter your email"
+          />
         </div>
 
         <div class="actions">
-          <button class="btn primary"
-                  (click)="addCustomer()">
+          <button class="btn primary" (click)="addCustomer()">
             Register
           </button>
         </div>
@@ -86,7 +87,6 @@
       </div>
     </section>
 
-    <!-- Registrants Section -->
     <section class="card">
       <div class="card-header">
         <h2 class="card-title">Registrants</h2>
@@ -103,15 +103,16 @@
             <div class="avatar">
               {{ (customer.name || '?')[0] }}
             </div>
-
             <div class="who-text">
               <div class="who-name">{{ customer.name }}</div>
               <div class="who-email">{{ customer.email }}</div>
             </div>
           </div>
 
-          <button class="btn danger"
-                  (click)="deleteCustomer(customer.id)">
+          <button
+            class="btn danger"
+            (click)="deleteCustomer(customer.id)"
+          >
             Cancel Registration
           </button>
         </li>
@@ -122,10 +123,8 @@
         Authentication & role-based access control would be required.
       </p>
     </section>
-
   </main>
 </div>
-
 
 <div class="content" style="display:none">
   <span>frontend app is running!</span>
