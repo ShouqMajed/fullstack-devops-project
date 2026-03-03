@@ -14,10 +14,17 @@
   <span>frontend app is running!</span>
 </div>
 -->
+<!-- ===== White Header ===== -->
+<header class="main-header">
+  <div class="header-container">
+    <h1 class="logo">DevOps Academy</h1>
+  </div>
+</header>
+
 <div class="page">
   <header class="hero">
     <div class="hero-inner">
-      <div class="badge">DevOps Academy</div>
+      <div class="badge">DevOps Program</div>
       <h1 class="hero-title">DevOps Foundations</h1>
       <p class="hero-subtitle">
         Practical CI/CD, Docker, Kubernetes, and Cloud basics — built for hands-on learning.
@@ -42,6 +49,7 @@
 
   <main class="container">
 
+    <!-- Registration Section -->
     <section class="card">
       <div class="card-header">
         <h2 class="card-title">Course Registration</h2>
@@ -55,18 +63,17 @@
           <label>Full Name</label>
           <input type="text"
                  [(ngModel)]="newCustomer.name"
-                 placeholder="e.g. Shoug Majed" />
+                 placeholder="Enter your full name" />
         </div>
 
         <div class="field">
           <label>Email</label>
           <input type="email"
                  [(ngModel)]="newCustomer.email"
-                 placeholder="e.g. shoug@email.com" />
+                 placeholder="Enter your email" />
         </div>
 
         <div class="actions">
-
           <button class="btn primary"
                   (click)="addCustomer()">
             Register
@@ -75,12 +82,11 @@
       </div>
 
       <div class="note">
-        <span class="dot"></span>
-        This is a demo registration system (CRUD functionality).
+        This is a demo CRUD registration interface.
       </div>
     </section>
 
- 
+    <!-- Registrants Section -->
     <section class="card">
       <div class="card-header">
         <h2 class="card-title">Registrants</h2>
@@ -104,7 +110,6 @@
             </div>
           </div>
 
-  
           <button class="btn danger"
                   (click)="deleteCustomer(customer.id)">
             Cancel Registration
@@ -112,12 +117,12 @@
         </li>
       </ul>
 
-  
       <p class="role-note">
         * In a real production system, only administrators can remove registrants.
         Authentication & role-based access control would be required.
       </p>
     </section>
+
   </main>
 </div>
 
