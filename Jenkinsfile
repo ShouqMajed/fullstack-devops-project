@@ -70,109 +70,116 @@ pipeline {
              }
     }
 
+stage('SonarQube Analysis') {
+  parallel {
+    stage('Backend - Sonarqube') {
+      steps {
+        dir('demo') {
+          withSonarQubeEnv('sonarqube') {
+            sh """
+              mvn -DskipTests clean verify \
+              org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+              -Dsonar.projectKey=fullstack-backend
+            """
+          }
+        }
+
+        timeout(time: 5, unit: 'MINUTES') {
+          script {
+            waitForQualityGate abortPipeline: true
+          }
+        }
+      }
+      post {
+        success { notifyStage('Backend - Sonarqube', 'SUCCESS') }
+        failure { notifyStage('Backend - Sonarqube', 'FAILURE') }
+      }
+    }
+
+    stage('Frontend - Sonarqube') {
+      steps {
+        dir('frontend') {
+          withSonarQubeEnv('sonarqube') {
+            script {
+              def scannerHome = tool 'sonar-scanner'
+              sh """
+                ${scannerHome}/bin/sonar-scanner \
+                -Dsonar.projectKey=fullstack-frontend \
+                -Dsonar.sources=src
+              """
+            }
+          }
+        }
+
+        timeout(time: 5, unit: 'MINUTES') {
+          script {
+            waitForQualityGate abortPipeline: true
+          }
+        }
+      }
+      post {
+        success { notifyStage('Frontend - Sonarqube', 'SUCCESS') }
+        failure { notifyStage('Frontend - Sonarqube', 'FAILURE') }
+      }
+    }
+  }
+}
+
+stage('Nexus Upload') {
+  parallel {
     stage('Backend-to-Nexus') {
       steps {
         dir('demo') {
-            nexusArtifactUploader artifacts: [
-               [
-                 artifactId: 'demo',
-                 classifier: '',
-                 file: 'target/demo-0.0.1-SNAPSHOT.jar',
-                 type: 'jar'
-               ]
-            ],
-                credentialsId: 'nexus',
-                groupId: 'com.example',
-               nexusUrl: '15.188.28.246:8081',
-               nexusVersion: 'nexus3',
-               protocol: 'http',
-               repository: 'fullstack-backend',
-               version: "0.0.1-${BUILD_NUMBER}"
-           }
-         }
-                  post {
-                success { notifyStage('Backend-to-Nexus', 'SUCCESS') }
-                  failure { notifyStage('Backend-to-Nexus', 'FAILURE') }
-             }
+          nexusArtifactUploader artifacts: [
+            [
+              artifactId: 'demo',
+              classifier: '',
+              file: 'target/demo-0.0.1-SNAPSHOT.jar',
+              type: 'jar'
+            ]
+          ],
+          credentialsId: 'nexus',
+          groupId: 'com.example',
+          nexusUrl: '15.188.28.246:8081',
+          nexusVersion: 'nexus3',
+          protocol: 'http',
+          repository: 'fullstack-backend',
+          version: "0.0.1-${BUILD_NUMBER}"
+        }
       }
-
-      stage('Frontend-to-Nexus') {
-        steps {
-           dir('frontend') {
-              sh "tar -czf frontend-0.0.1-${BUILD_NUMBER}.tgz dist"
-               nexusArtifactUploader artifacts: [
-                [
-                  artifactId: 'frontend',
-                  classifier: '',
-                  file: "frontend-0.0.1-${BUILD_NUMBER}.tgz",
-                  type: 'tgz'
-                ]
-               ],
-                  credentialsId: 'nexus',
-                 groupId: 'com.example',
-                 nexusUrl: '15.188.28.246:8081',
-                 nexusVersion: 'nexus3',
-                 protocol: 'http',
-                 repository: 'fullstack-frontend',
-                 version: "0.0.1-${BUILD_NUMBER}"
-               }
-             }
-                    post {
-                success { notifyStage('Frontend-to-Nexus', 'SUCCESS') }
-                  failure { notifyStage('Frontend-to-Nexus', 'FAILURE') }
-             }
-          }
-
-stage('Backend - Sonarqube') {
-    steps {
-        dir('demo') {
-            withSonarQubeEnv('sonarqube') {
-                sh """
-                    mvn -DskipTests clean verify \
-                    org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-                    -Dsonar.projectKey=fullstack-backend
-                """
-            }
-        }
-
-        timeout(time: 5, unit: 'MINUTES') {
-            script {
-                waitForQualityGate abortPipeline: true
-            }
-        }
+      post {
+        success { notifyStage('Backend-to-Nexus', 'SUCCESS') }
+        failure { notifyStage('Backend-to-Nexus', 'FAILURE') }
+      }
     }
-              post {
-                success { notifyStage('Backend - Sonarqube', 'SUCCESS') }
-                  failure { notifyStage('Backend - Sonarqube', 'FAILURE') }
-             }
 
-}
-
-stage('Frontend - Sonarqube') {
-    steps {
+    stage('Frontend-to-Nexus') {
+      steps {
         dir('frontend') {
-            withSonarQubeEnv('sonarqube') {
-                script {
-                    def scannerHome = tool 'sonar-scanner'
-                    sh """
-                        ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=fullstack-frontend \
-                        -Dsonar.sources=src
-                    """
-                }
-            }
+          sh "tar -czf frontend-0.0.1-${BUILD_NUMBER}.tgz dist"
+          nexusArtifactUploader artifacts: [
+            [
+              artifactId: 'frontend',
+              classifier: '',
+              file: "frontend-0.0.1-${BUILD_NUMBER}.tgz",
+              type: 'tgz'
+            ]
+          ],
+          credentialsId: 'nexus',
+          groupId: 'com.example',
+          nexusUrl: '15.188.28.246:8081',
+          nexusVersion: 'nexus3',
+          protocol: 'http',
+          repository: 'fullstack-frontend',
+          version: "0.0.1-${BUILD_NUMBER}"
         }
-
-        timeout(time: 5, unit: 'MINUTES') {
-            script {
-                waitForQualityGate abortPipeline: true
-            }
-        }
+      }
+      post {
+        success { notifyStage('Frontend-to-Nexus', 'SUCCESS') }
+        failure { notifyStage('Frontend-to-Nexus', 'FAILURE') }
+      }
     }
-              post {
-                success { notifyStage('Frontend - Sonarqube', 'SUCCESS') }
-                  failure { notifyStage('Frontend - Sonarqube', 'FAILURE') }
-             }
+  }
 }
      stage('Docker Build & Push (Ansible)') {
        steps {
